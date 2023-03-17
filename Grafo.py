@@ -2,80 +2,60 @@ import numpy as np
 from Vertice import Vertice
 
 
-class Grafo:
+class Grafo(object):
 
-    def __init__(self):
-        #self.vertices = {}
+    def __init__(self, direcionado=False):
         self.vertices = []
+        self.direcionado = direcionado
+        #falta fazer ser direcionado
 
     def nomear_vertice(self, index):
         return (self.vertices[index].get_label())
 
     def adicionar_vertice(self, label):
         self.vertices.append(Vertice(label))
-        '''
-        if vertice not in self.vertices:
-            self.vertices[vertice] = {}
-        '''
+        #falta verificar se ja existe
 
     def excluir_vertice(self, vertice):
         self.vertices.remove(self.vertices[vertice])
-        '''if vertice in self.vertices:
-            for origem in self.vertices:
-                if vertice in self.vertices[origem]:
-                    del self.vertices[origem][vertice]
-            del self.vertices[vertice]
-        '''
+        #falta verificar se existe
 
     def adicionar_aresta(self, origem, destino, peso=1):
-        if origem in self.vertices:
-            self.vertices[origem][destino] = peso
-        else:
-            self.vertices[origem] = {destino: peso}
+        self.vertices[origem].arestas[destino] = peso
 
     def excluir_aresta(self, origem, destino):
-        if origem in self.vertices:
-            if destino in self.vertices[origem]:
-                del self.vertices[origem][destino]
-
-    def adjacencia(self, vertice1, vertice2):
-        if vertice1 in self.vertices and vertice2 in self.vertices:
-            return vertice2 in self.vertices[
-                vertice1] or vertice1 in self.vertices[vertice2]
-        else:
-            return False
+        self.vertices[origem].arestas.pop(destino)
 
     def existe_aresta(self, origem, destino):
-        if origem in self.vertices:
-            return destino in self.vertices[origem]
-        else:
-            return False
+        return self.vertices[origem].arestas.__contains__(destino)
 
     def peso_aresta(self, origem, destino):
-        if origem in self.vertices and destino in self.vertices[origem]:
-            return self.vertices[origem][destino]
-        else:
-            return None
+        if self.existe_aresta(origem, destino):
+            return self.vertices[origem].arestas[destino]
+        return -1
 
     def vizinhos(self, vertice):
-        if vertice in self.vertices:
-            return list(self.vertices[vertice].keys())
-        else:
-            return []
+        return self.vertices[vertice].arestas
 
     def vetorial(self):
         for i in range(len(self.vertices)):
-            print(f"{self.nomear_vertice(i)} → porra")
+            print(f"{self.nomear_vertice(i)} → {self.vertices[i].arestas}")
 
     def matricial(self):
-        '''matriz = np.zeros((self.tamanho, self.tamanho))
-        for i in range(self.tamanho):
-            for j in range(self.tamanho):
-                if i != j:
-                    matriz[i][j] = self.vertices[i]
-        '''
+        matriz = np.zeros((len(self.vertices), len(self.vertices)))
 
-        for i in self.vertices:
+        for i in range(len(self.vertices)):
+            print(f"   {self.nomear_vertice(i)}", end=" ")
+
+        print("\n")
+
+        for i in range(len(self.vertices)):
+            print(self.nomear_vertice(i), end=" ")
+
+            for j in range(len(self.vertices)):
+                if self.existe_aresta(i, j):
+                    matriz[i, j] = self.peso_aresta(i, j)
+                print(f"[{matriz[i][j]}]", end=" ")
+
             print()
-
         #print(matriz)
