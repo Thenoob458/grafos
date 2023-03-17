@@ -1,7 +1,7 @@
 from Grafo import Grafo
 
 if __name__ == "__main__":
-    g = Grafo()
+    g = Grafo(True)
     g.adicionar_vertice('A')
     g.adicionar_vertice('B')
     g.adicionar_vertice('C')

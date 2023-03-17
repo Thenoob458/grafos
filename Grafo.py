@@ -22,6 +22,8 @@ class Grafo(object):
 
     def adicionar_aresta(self, origem, destino, peso=1):
         self.vertices[origem].arestas[destino] = peso
+        if self.direcionado == False:
+            self.vertices[destino].arestas[origem] = peso
 
     def excluir_aresta(self, origem, destino):
         self.vertices[origem].arestas.pop(destino)
